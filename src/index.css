@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* 暖白底 */
+  --paper: #fffbf4;
+  --paper-2: #fff4e3;
+  --ink: #3d2e26;
+  --ink-soft: #7a6458;
+  --line: #f0dfc8;
+
+  /* 橙：正能量短句 */
+  --orange: #f08a3c;
+  --orange-deep: #c9631f;
+  --orange-wash: #ffe9d6;
+
+  /* 黃：點綴、標題太陽 */
+  --yellow: #f6c64a;
+  --yellow-wash: #fff3c8;
+
+  /* 淺綠：好方法 */
+  --green: #8cc38a;
+  --green-deep: #3f7a4a;
+  --green-wash: #e5f3e0;
+
+  /* 淺藍：經典好句 */
+  --blue: #8ebde0;
+  --blue-deep: #2f6690;
+  --blue-wash: #e2eff8;
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-serif-tc {
+  font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+}
+
+/* 抽到新內容時的淡入 */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  animation: rise 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* 標題太陽緩慢轉動 */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin-slow {
+  animation: spin-slow 40s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+/* 海浪左右慢慢流動：圖案寬度是畫面的兩倍，移動一半剛好接回原點 */
+@keyframes drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.wave {
+  width: 200%;
+  animation: drift linear infinite;
+}
+.wave-slow {
+  animation-duration: 38s;
+}
+.wave-fast {
+  animation-duration: 22s;
+}
+
+/* 雲朵與海鷗：很慢地左右飄 */
+@keyframes float {
+  50% {
+    transform: translateX(28px);
+  }
+}
+.float {
+  animation: float 60s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .spin-slow,
+  .wave,
+  .float {
+    animation: none;
+  }
+}
