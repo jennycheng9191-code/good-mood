@@ -464,6 +464,9 @@ export default function App() {
         <p className="mt-2 text-[15px]" style={{ color: "var(--ink-soft)" }}>
           短句為原創；經典句中標示「意譯」者為依原文意思自行翻譯。
         </p>
+        <p className="mt-3 text-[15px]" style={{ color: "var(--ink-soft)" }}>
+          站長：Jenny Cheng
+        </p>
       </Beach>
     </div>
   )
