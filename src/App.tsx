@@ -12,10 +12,15 @@ type Method = {
   source?: string
 }
 type Classic = { id: string; direction: string; source: string; text: string; plain: string }
+// 給特定讀者的話：type 是「暖心話」或「做法」
+type Voice = { id: string; type: string; theme: string; text: string }
 
 const quotes = materials.quotes as Quote[]
 const methods = materials.methods as Method[]
 const classics = materials.classics as Classic[]
+const parents = materials.parents as Voice[]
+const teens = materials.teens as Voice[]
+const traders = materials.traders as Voice[]
 
 /*
  * 抽籤袋：一輪抽完才重洗，重洗後第一張不會和上一張相同。
@@ -63,13 +68,16 @@ function useBag<T extends { id: string }>(items: T[], storageKey: string) {
   }, [items, storageKey])
 }
 
-type Tone = "orange" | "green" | "blue"
+type Tone = "orange" | "green" | "blue" | "rose" | "purple" | "teal"
 
 // btn 色比 solid 深一階，讓白字在按鈕上清楚可讀
 const tones: Record<Tone, { wash: string; solid: string; deep: string; btn: string }> = {
   orange: { wash: "var(--orange-wash)", solid: "var(--orange)", deep: "var(--orange-deep)", btn: "#e2702a" },
   green: { wash: "var(--green-wash)", solid: "var(--green)", deep: "var(--green-deep)", btn: "#4e8f55" },
   blue: { wash: "var(--blue-wash)", solid: "var(--blue)", deep: "var(--blue-deep)", btn: "#3d7fb2" },
+  rose: { wash: "var(--rose-wash)", solid: "var(--rose)", deep: "var(--rose-deep)", btn: "#c2526f" },
+  purple: { wash: "var(--purple-wash)", solid: "var(--purple)", deep: "var(--purple-deep)", btn: "#7660b5" },
+  teal: { wash: "var(--teal-wash)", solid: "var(--teal)", deep: "var(--teal-deep)", btn: "#3b877c" },
 }
 
 function Chip({ children, tone }: { children: ReactNode; tone: Tone }) {
@@ -176,6 +184,37 @@ const BookIcon = () => (
     <path d="M12 6.5v13" />
   </svg>
 )
+const HeartIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+    <path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10Z" fill="currentColor" fillOpacity=".15" />
+  </svg>
+)
+const StarIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+    <path d="m12 3.5 2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8Z" fill="currentColor" fillOpacity=".15" />
+  </svg>
+)
+const CompassIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="m15.5 8.5-2 5-5 2 2-5Z" fill="currentColor" fillOpacity=".2" />
+  </svg>
+)
+
+/* 給特定讀者的話：內文加上「暖心話／做法」與主題兩個標籤 */
+function VoiceCard({ item, tone }: { item: Voice; tone: Tone }) {
+  return (
+    <>
+      <p className="font-serif-tc text-[23px] font-medium leading-[1.75]" style={{ color: "var(--ink)" }}>
+        {item.text}
+      </p>
+      <div className="mt-auto flex flex-wrap gap-2 pt-5">
+        <Chip tone={tone}>{item.type}</Chip>
+        <Chip tone={tone}>{item.theme}</Chip>
+      </div>
+    </>
+  )
+}
 
 /* 一段可無縫重複的海浪曲線：寬 2880（兩倍畫面），週期 240 */
 function wavePath(amp: number, base: number, height: number) {
@@ -296,10 +335,16 @@ export default function App() {
   const drawQuote = useBag(quotes, "goodmood-bag-quotes")
   const drawMethod = useBag(methods, "goodmood-bag-methods")
   const drawClassic = useBag(classics, "goodmood-bag-classics")
+  const drawParent = useBag(parents, "goodmood-bag-parents")
+  const drawTeen = useBag(teens, "goodmood-bag-teens")
+  const drawTrader = useBag(traders, "goodmood-bag-traders")
 
   const [quote, setQuote] = useState<{ item: Quote; n: number } | null>(null)
   const [method, setMethod] = useState<{ item: Method; n: number } | null>(null)
   const [classic, setClassic] = useState<{ item: Classic; n: number } | null>(null)
+  const [parent, setParent] = useState<{ item: Voice; n: number } | null>(null)
+  const [teen, setTeen] = useState<{ item: Voice; n: number } | null>(null)
+  const [trader, setTrader] = useState<{ item: Voice; n: number } | null>(null)
 
   return (
     <div
@@ -454,6 +499,45 @@ export default function App() {
               </>
             )}
           </Panel>
+
+          <Panel
+            tone="rose"
+            icon={<HeartIcon />}
+            kicker="給青少年父母的話"
+            label="抽一句給父母的話"
+            total={parents.length}
+            emptyHint="按下按鈕，抽一句陪你陪伴孩子的話。"
+            onDraw={() => setParent((p) => ({ item: drawParent(), n: (p?.n ?? 0) + 1 }))}
+            drawKey={parent?.n ?? 0}
+          >
+            {parent && <VoiceCard item={parent.item} tone="rose" />}
+          </Panel>
+
+          <Panel
+            tone="purple"
+            icon={<StarIcon />}
+            kicker="給青少年的話"
+            label="抽一句給你的話"
+            total={teens.length}
+            emptyHint="按下按鈕，抽一句寫給正在長大的你的話。"
+            onDraw={() => setTeen((p) => ({ item: drawTeen(), n: (p?.n ?? 0) + 1 }))}
+            drawKey={teen?.n ?? 0}
+          >
+            {teen && <VoiceCard item={teen.item} tone="purple" />}
+          </Panel>
+
+          <Panel
+            tone="teal"
+            icon={<CompassIcon />}
+            kicker="給交易員的話"
+            label="抽一句給交易員的話"
+            total={traders.length}
+            emptyHint="按下按鈕，抽一句陪你面對市場的話。"
+            onDraw={() => setTrader((p) => ({ item: drawTrader(), n: (p?.n ?? 0) + 1 }))}
+            drawKey={trader?.n ?? 0}
+          >
+            {trader && <VoiceCard item={trader.item} tone="teal" />}
+          </Panel>
         </div>
 
 
@@ -462,7 +546,10 @@ export default function App() {
       <Beach>
         <p>本站內容非醫療建議。持續的失眠、焦慮或情緒低落，請尋求專業協助。</p>
         <p className="mt-2 text-[15px]" style={{ color: "var(--ink-soft)" }}>
-          短句為原創；經典句中標示「意譯」者為依原文意思自行翻譯。
+          「給青少年父母的話」與「給青少年的話」是一般性的陪伴，不取代諮商或輔導；「給交易員的話」只談心態，不構成任何投資建議。
+        </p>
+        <p className="mt-2 text-[15px]" style={{ color: "var(--ink-soft)" }}>
+          短句與三組「給⋯⋯的話」皆為原創；經典句中標示「意譯」者為依原文意思自行翻譯。
         </p>
         <p className="mt-3 text-[15px]" style={{ color: "var(--ink-soft)" }}>
           站長：Jenny Cheng

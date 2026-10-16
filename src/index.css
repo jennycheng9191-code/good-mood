@@ -28,6 +28,21 @@
   --blue: #8ebde0;
   --blue-deep: #2f6690;
   --blue-wash: #e2eff8;
+
+  /* 玫瑰：給青少年父母的話 */
+  --rose: #ec9db0;
+  --rose-deep: #a8405d;
+  --rose-wash: #fce6ec;
+
+  /* 淺紫：給青少年的話 */
+  --purple: #b6a4de;
+  --purple-deep: #5d4996;
+  --purple-wash: #eee8f8;
+
+  /* 青綠：給交易員的話 */
+  --teal: #7fc4b9;
+  --teal-deep: #2b6e65;
+  --teal-wash: #dff1ee;
 }
 
 html,
